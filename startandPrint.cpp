@@ -1,34 +1,62 @@
 #include <iostream>
-#include <algorithm>
 #include <random>
-#include <iterator>
-#include <cstdlib>
 #include <ctime>
 #include <array>
-using namespace std;
 #include <string>
+#include <algorithm>
+#include "pythashki.h"
 
-array<array<int, 4>, 4> startGame(int& i0, int& j0) {
-    //подготовка к работе нач//
-    array<array<int, 4>, 4> mass;
+bool isCorrect(std::array<std::array<int, 4>, 4>& mass, int& i0)
+{
+    int sumK{};
+    
+    for (int i1 = 0, j1 = 0; i1 < 4;) {
+        int k{ mass[i1][j1] };
+        
+        for (int i = i1; i < 4; ++i) {
+
+            int j;
+            if (i == i1) j = j1; else j = 0;
+
+            for (; j < 4; ++j)
+                if (k > mass[i][j] && mass[i][j] != 0)
+                    sumK += 1;
+        }
+        ++j1;
+        if (j1 == 4)
+        {
+            j1 = 0;
+            ++i1;
+        }
+   
+    }
+    return (sumK % 2 == 0 && i0 % 2 != 0);
+        
+}
+
+std::array<std::array<int, 4>, 4> startGame(int& i0, int& j0) {
+    //РїРѕРґРіРѕС‚РѕРІРєР° Рє СЂР°Р±РѕС‚Рµ РЅР°С‡//
+    std::array<std::array<int, 4>, 4> mass;
     int i = 0;
     int j = 0;
     int k = 0;
-    string s = "0123456789ABCDEF";
+    int i14{}, j14{}, i15{}, j15{};
+    std::string s = "0123456789ABCDEF";
     std::srand(std::time(0));
 
-    //рандомно встряхиваем строку//
-    random_shuffle(s.begin(), s.end());
+    //СЂР°РЅРґРѕРјРЅРѕ РІСЃС‚СЂСЏС…РёРІР°РµРј СЃС‚СЂРѕРєСѓ//
+    std::random_device rd;
+    std::mt19937 g(rd());
+    shuffle(s.begin(), s.end(), g);
 
-
-    //заполняем массив значением -1//
+    //Р·Р°РїРѕР»РЅСЏРµРј РјР°СЃСЃРёРІ Р·РЅР°С‡РµРЅРёРµРј -1//
     for (int i = 0; i < 4; i++)
         for (int j = 0; i < 4; i++)
             mass[i][j] = -1;
 
-    //заполняем массив (подготавливаем стартовое поле)//
+    //Р·Р°РїРѕР»РЅСЏРµРј РјР°СЃСЃРёРІ (РїРѕРґРіРѕС‚Р°РІР»РёРІР°РµРј СЃС‚Р°СЂС‚РѕРІРѕРµ РїРѕР»Рµ)//
     for (const char ch : s) {
-        //переводим числа из 16сс в 10сс//
+        //РїРµСЂРµРІРѕРґРёРј С‡РёСЃР»Р° РёР· 16СЃСЃ РІ 10СЃСЃ//
         switch (ch) {
         case '0': k = 0; break;
         case '1': k = 1; break;
@@ -47,143 +75,41 @@ array<array<int, 4>, 4> startGame(int& i0, int& j0) {
         case 'E': k = 14; break;
         case 'F': k = 15; break;
         default:
-            cout << "chislo is undefined" << "\n";
+            std::cout << "chislo is undefined" << "\n";
             break;
         }
-        //полученное число в 10сс из строки вписываем в массив//
+        //РїРѕР»СѓС‡РµРЅРЅРѕРµ С‡РёСЃР»Рѕ РІ 10СЃСЃ РёР· СЃС‚СЂРѕРєРё РІРїРёСЃС‹РІР°РµРј РІ РјР°СЃСЃРёРІ//
         mass[i][j] = k;
         if (k == 0) {
             i0 = i;
             j0 = j;
         }
+        if (k == 14) {
+            i14 = i;
+            j14 = j;
+        }
+        if (k == 15) {
+            i15 = i;
+            j15 = j;
+        }
         j++;
-        //переход на новую строку массива//
+        //РїРµСЂРµС…РѕРґ РЅР° РЅРѕРІСѓСЋ СЃС‚СЂРѕРєСѓ РјР°СЃСЃРёРІР°//
         if (j == 4) {
             j = 0;
             i++;
         }
     }
+
+    if (!isCorrect(mass, i0))
+        std::swap(mass[i15][j15], mass[i14][j14]);
+   
     return mass;
 }
 
-//void printGame(const array<array<int, 4>, 4>& mass) {
-//
-//
-//    int o = 0;
-//    int p = 0;
-//
-//    //рисуем поле, выводим значения//
-//    for (int o = 0; o < 4; o++) {
-//        //* * * * *...//
-//        for (int i = 0; i < 5; i++) cout << "* * * * * ";
-//        cout << endl;
-//        //*   *    *    *    *//
-//        cout << "*";
-//        for (int i = 0; i < 11; i++)cout << " ";
-//        cout << "*";
-//        for (int i = 0; i < 11; i++)cout << " ";
-//        cout << "*";
-//        for (int i = 0; i < 11; i++)cout << " ";
-//        cout << "*";
-//        for (int i = 0; i < 11; i++)cout << " ";
-//        cout << "*" << endl;
-//
-//        //  * 1 * 2 * 3 * 4 * //
-//        cout << "*";
-//        if (mass[o][p] > 9) {
-//            for (int i = 0; i < 4; i++)cout << " ";
-//            cout << mass[o][p];
-//            for (int i = 0; i < 5; i++)cout << " ";
-//            cout << "*";
-//        }
-//        else {
-//            for (int i = 0; i < 5; i++)cout << " ";
-//            if (mass[o][p] == 0)
-//                cout << " ";
-//            else
-//                cout << mass[o][p];
-//            for (int i = 0; i < 5; i++)cout << " ";
-//            cout << "*";
-//
-//        }
-//        p++; //сдвиг столбца массива//
-//        if (mass[o][p] > 9) {
-//            for (int i = 0; i < 4; i++)cout << " ";
-//            cout << mass[o][p];
-//            for (int i = 0; i < 5; i++)cout << " ";
-//            cout << "*";
-//        }
-//        else {
-//            for (int i = 0; i < 5; i++)cout << " ";
-//            if (mass[o][p] == 0)
-//                cout << " ";
-//            else
-//                cout << mass[o][p];
-//            for (int i = 0; i < 5; i++)cout << " ";
-//            cout << "*";
-//        }
-//        p++; //сдвиг столбца массива//
-//        if (mass[o][p] > 9) {
-//            for (int i = 0; i < 4; i++)cout << " ";
-//            cout << mass[o][p];
-//            for (int i = 0; i < 5; i++)cout << " ";
-//            cout << "*";
-//        }
-//        else {
-//            for (int i = 0; i < 5; i++)cout << " ";
-//            if (mass[o][p] == 0)
-//                cout << " ";
-//            else
-//                cout << mass[o][p];
-//            for (int i = 0; i < 5; i++)cout << " ";
-//            cout << "*";
-//        }
-//        p++; //сдвиг столбца массива//
-//        if (mass[o][p] > 9) {
-//            for (int i = 0; i < 4; i++)cout << " ";
-//            cout << mass[o][p];
-//            for (int i = 0; i < 5; i++)cout << " ";
-//            cout << "*";
-//        }
-//        else {
-//            for (int i = 0; i < 5; i++)cout << " ";
-//            if (mass[o][p] == 0)
-//                cout << " ";
-//            else
-//                cout << mass[o][p];
-//            for (int i = 0; i < 5; i++)cout << " ";
-//            cout << "*";
-//
-//        }
-//        p = 0; //начинаем с 0, тк переходим на новую строку массива//
-//        cout << endl;
-//
-//
-//
-//
-//        //_____//
-//        cout << "*";
-//        for (int i = 0; i < 11; i++)cout << " ";
-//        cout << "*";
-//        for (int i = 0; i < 11; i++)cout << " ";
-//        cout << "*";
-//        for (int i = 0; i < 11; i++)cout << " ";
-//        cout << "*";
-//        for (int i = 0; i < 11; i++)cout << " ";
-//        cout << "*" << endl;
-//
-//
-//
-//        //-------------------------------//
-//    }
-//    for (int i = 0; i < 5; i++)cout << "* * * * * ";
-//    cout << endl;
-//}
-
-void printGame(const array<array<int, 4>, 4>& mass) {
+void printGame(const std::array<std::array<int, 4>, 4>& mass) {
     system("cls");
 
-    std::cout << "Игра пятнашки. Нажимайте стрелки, чтобы передвигать пустую клетку. Удачи!\n";
+    std::cout << "РРіСЂР° РїСЏС‚РЅР°С€РєРё. РќР°Р¶РёРјР°Р№С‚Рµ СЃС‚СЂРµР»РєРё, С‡С‚РѕР±С‹ РїРµСЂРµРґРІРёРіР°С‚СЊ РїСѓСЃС‚СѓСЋ РєР»РµС‚РєСѓ. РЈРґР°С‡Рё!\n";
     for (int i = 0; i < 4; ++i) {
         std::cout << "* * * * * * * * * * * * * * * * * * * * * * * * *\n"
                      "*           *           *           *           *\n";
