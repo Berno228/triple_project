@@ -1,11 +1,7 @@
 #include <iostream>
 #include <array>
 #include <Windows.h>
-using namespace std;
-
-inline bool victory(array<array<int, 4>, 4>& base);
-array<array<int, 4>, 4> startGame(int& i0, int& j0);
-void printGame(const array<array<int, 4>, 4>& mass);
+#include "pythashki.h"
 
 void hideCursor() {
 	HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -16,7 +12,7 @@ void hideCursor() {
 }
 
 
-void swapElements(array<array<int, 4>, 4>& base, int& i0, int& j0, int& trys) {
+void swapElements(std::array<std::array<int, 4>, 4>& base, int& i0, int& j0, int& trys) {
 	printGame(base);
 
 	while (true) {
@@ -57,4 +53,3 @@ void swapElements(array<array<int, 4>, 4>& base, int& i0, int& j0, int& trys) {
 		Sleep(200);
 	}
 }
-
