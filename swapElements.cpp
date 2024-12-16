@@ -20,27 +20,27 @@ void swapElements(std::array<std::array<int, 4>, 4>& base, int& i0, int& j0, int
 		if (victory(base))
 			break;
 
-		if (i0 >= 1 and i0 <= 3 and GetAsyncKeyState(VK_UP)) {
+		if (i0 >= 1 && i0 <= 3 && GetAsyncKeyState(VK_UP)) {
 			std::swap(base[i0][j0], base[i0--][j0]);
 			printGame(base);
 			++trys;
 		}
 		
-		if (i0 >= 0 and i0 <= 2 and GetAsyncKeyState(VK_DOWN)) {
+		if (i0 >= 0 && i0 <= 2 && GetAsyncKeyState(VK_DOWN)) {
 			std::swap(base[i0][j0], base[i0++][j0]);
 			printGame(base);
 			++trys;
 		}
 
 		
-		if (j0 >= 1 and j0 <= 3 and GetAsyncKeyState(VK_LEFT)) {
+		if (j0 >= 1 && j0 <= 3 && GetAsyncKeyState(VK_LEFT)) {
 			std::swap(base[i0][j0], base[i0][j0--]);
 			printGame(base);
 			++trys;
 		}
 
 	
-		if (j0 >= 0 and j0 <= 2 and GetAsyncKeyState(VK_RIGHT)) {
+		if (j0 >= 0 && j0 <= 2 && GetAsyncKeyState(VK_RIGHT)) {
 			std::swap(base[i0][j0], base[i0][j0++]);
 			printGame(base);
 			++trys;
